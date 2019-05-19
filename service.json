@@ -1,0 +1,34 @@
+[
+  {
+    "name": "Content Get",
+    "url": "/content/get",
+    "hosts": "localhost:8081",
+    "method": "GET",
+    "params": [
+      {
+        "key": "gtin",
+        "value": "123"
+      }
+    ],
+    "body": "ewoJInRpdGxlIjoidGVzdCIsCgkiY29udGVudCI6ImNvbnRzIiwKCSJ2YWxzIjotMQp9",
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ]
+  },
+  {
+    "name": "Content Add",
+    "url": "/content/add",
+    "hosts": "localhost:8081",
+    "method": "POST",
+    "body": "ewoJInRpdGxlIjoidGVzdCIsCgkiY29udGVudCI6ImNvbnRzIiwKCSJ2YWxzIjoyCn0=",
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ]
+  }
+]
