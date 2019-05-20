@@ -28,6 +28,7 @@ public class HealthService {
 
     private List<ServiceModel> models = new ArrayList<>();
     private Instant lastRun = Instant.now();
+    private int duration;
 
     @PostConstruct
     private void init() {

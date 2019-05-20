@@ -15,7 +15,8 @@ public class ServiceModel {
     String name;
     String url;
     String hosts;
-    Integer status;
+    Integer timeoutSec;
+    List<Integer> status;
     List<HeaderModel> params;
     MethodEnum method;
     String body;

@@ -23,8 +23,7 @@ import java.net.SocketTimeoutException;
 import java.util.List;
 import java.util.Optional;
 
-import static com.walmart.econgo.util.helper.RequestHelper.handleError;
-import static com.walmart.econgo.util.helper.RequestHelper.setHeaders;
+import static com.walmart.econgo.util.helper.RequestHelper.*;
 
 
 /**
@@ -44,12 +43,13 @@ public class RequestRunnable implements Runnable {
     private void checkServiceStatus() {
         try {
             String[] hosts = model.getHosts().split(",");
-            int timeout = 5;
+            int timeout = model.getTimeoutSec();
             RequestConfig config = RequestConfig.custom()
                     .setConnectTimeout(timeout * 1000)
                     .setConnectionRequestTimeout(timeout * 1000)
                     .setSocketTimeout(timeout * 1000).build();
             CloseableHttpClient httpClient = HttpClients.custom().setDefaultRequestConfig(config).build();
+            Integer healthyCount = hosts.length;
             URIBuilder builder;
             for (String host : hosts) {
                 builder = new URIBuilder();
@@ -78,18 +78,26 @@ public class RequestRunnable implements Runnable {
                         req.setEntity(body);
                         response = httpClient.execute(req);
                     }
+                    boolean flag = false;
+                    for (Integer status : model.getStatus())
+                        if (response.getStatusLine().getStatusCode() == status)
+                            flag = true;
 
-                    if (response.getStatusLine().getStatusCode() != model.getStatus()) {
+                    if (!flag) {
                         handleError(model, host, response);
+                        healthyCount--;
                     } else
                         log.info("Service - " + model.getName() + " is healthy on host - " + host);
                 } catch (HttpHostConnectException eh) {
                     response.setStatusCode(1);
                     handleError(model, host, response);
+                    healthyCount--;
                 } catch (ConnectTimeoutException | SocketTimeoutException eh) {
                     response.setStatusCode(2);
                     handleError(model, host, response);
+                    healthyCount--;
                 }
+                sendReport(model, healthyCount, hosts.length);
             }
         } catch (Exception ex) {
             log.error(ex);

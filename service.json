@@ -2,7 +2,11 @@
   {
     "name": "Content Get",
     "url": "/content/get",
-    "status": 200,
+    "timeoutSec": 5,
+    "status": [
+      200,
+      206
+    ],
     "hosts": "localhost:8081",
     "method": "GET",
     "params": [
@@ -22,7 +26,11 @@
     "name": "Content Non Found",
     "url": "/content/not",
     "hosts": "localhost:8081",
-    "status": 200,
+    "timeoutSec": 5,
+    "status": [
+      200,
+      404
+    ],
     "method": "GET",
     "headers": [
       {
@@ -35,7 +43,10 @@
     "name": "Content Add",
     "url": "/content/add",
     "hosts": "localhost:8081",
-    "status": 200,
+    "timeoutSec": 5,
+    "status": [
+      200
+    ],
     "method": "POST",
     "body": "ewoJInRpdGxlIjoidGVzdCIsCgkiY29udGVudCI6ImNvbnRzIiwKCSJ2YWxzIjoyCn0=",
     "headers": [
