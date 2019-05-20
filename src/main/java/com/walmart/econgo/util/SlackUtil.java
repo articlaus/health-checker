@@ -15,7 +15,7 @@ import java.io.IOException;
  * Project: ServiceStatusChecker
  */
 public class SlackUtil {
-    private static String webhook = "https://hooks.slack.com/services/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";
+    private static String webhook = "..";
 
     public static void sendMessage(SlackModel model) {
         CloseableHttpClient client = HttpClients.createDefault();

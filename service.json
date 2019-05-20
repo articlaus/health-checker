@@ -18,6 +18,18 @@
     ]
   },
   {
+    "name": "Content Non Found",
+    "url": "/content/not",
+    "hosts": "localhost:8081",
+    "method": "GET",
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ]
+  },
+  {
     "name": "Content Add",
     "url": "/content/add",
     "hosts": "localhost:8081",
