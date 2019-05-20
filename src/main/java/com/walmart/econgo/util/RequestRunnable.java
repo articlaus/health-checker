@@ -19,6 +19,9 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.commons.codec.binary.Base64;
 
 import java.net.SocketTimeoutException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,8 +79,8 @@ public class RequestRunnable implements Runnable {
 
                     if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
                         handleError(model.getName(), host, response.getStatusLine().getStatusCode());
-                    }
-                    log.info("Service - " + model.getName() + " is healthy on host - " + host);
+                    } else
+                        log.info("Service - " + model.getName() + " is healthy on host - " + host);
                 } catch (HttpHostConnectException eh) {
                     handleError(model.getName(), host, -1);
                 } catch (ConnectTimeoutException | SocketTimeoutException eh) {
@@ -99,6 +102,7 @@ public class RequestRunnable implements Runnable {
             slackModel.setText("Service - " + name + " \n On Host -" + host + "\n connected but timed out after 5 seconds");
         } else
             slackModel.setText("Service - " + name + " \n Failed on Host-" + host + "\n with status code of -" + statusCode);
+        slackModel.setText(slackModel.getText() + "\n Time = " + Instant.now());
         slackModel.setIcon_emoji(":interrobang:");
         SlackUtil.sendMessage(slackModel);
     }

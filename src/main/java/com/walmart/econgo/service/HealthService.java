@@ -36,6 +36,7 @@ public class HealthService {
             JsonReader reader = new JsonReader(new FileReader(System.getProperty("user.dir") + "/service.json"));
             ServiceModel[] serviceArrays = gson.fromJson(reader, ServiceModel[].class);
             models = Arrays.asList(serviceArrays);
+            log.info("Loaded " + models.size() + " number of services");
         } catch (Exception ex) {
             log.error(ex);
         }
@@ -53,7 +54,7 @@ public class HealthService {
     @Scheduled(fixedDelay = 300000)
     private void checkHealth() {
         for (ServiceModel model : models) {
-            log.info("Starting health check on - " + model.getName() + " with hosts on + " + model.getHosts());
+            log.info("Starting health check on - " + model.getName() + " with hosts of + " + model.getHosts());
             new Thread(new RequestRunnable(model)).start();
         }
     }
