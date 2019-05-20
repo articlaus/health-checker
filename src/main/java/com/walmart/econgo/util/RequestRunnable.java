@@ -79,16 +79,16 @@ public class RequestRunnable implements Runnable {
                         response = httpClient.execute(req);
                     }
 
-                    if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                        handleError(model.getName(), host, response);
+                    if (response.getStatusLine().getStatusCode() != model.getStatus()) {
+                        handleError(model, host, response);
                     } else
                         log.info("Service - " + model.getName() + " is healthy on host - " + host);
                 } catch (HttpHostConnectException eh) {
                     response.setStatusCode(1);
-                    handleError(model.getName(), host, response);
+                    handleError(model, host, response);
                 } catch (ConnectTimeoutException | SocketTimeoutException eh) {
                     response.setStatusCode(2);
-                    handleError(model.getName(), host, response);
+                    handleError(model, host, response);
                 }
             }
         } catch (Exception ex) {
