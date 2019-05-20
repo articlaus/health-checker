@@ -33,7 +33,7 @@ public class HealthService {
     private void init() {
         Gson gson = new Gson();
         try {
-            JsonReader reader = new JsonReader(new FileReader(System.getProperty("user.dir") + "\\service.json"));
+            JsonReader reader = new JsonReader(new FileReader(System.getProperty("user.dir") + "/service.json"));
             ServiceModel[] serviceArrays = gson.fromJson(reader, ServiceModel[].class);
             models = Arrays.asList(serviceArrays);
         } catch (Exception ex) {
@@ -53,6 +53,7 @@ public class HealthService {
     @Scheduled(fixedDelay = 300000)
     private void checkHealth() {
         for (ServiceModel model : models) {
+            log.info("Starting health check on - " + model.getName() + " with hosts on + " + model.getHosts());
             new Thread(new RequestRunnable(model)).start();
         }
     }

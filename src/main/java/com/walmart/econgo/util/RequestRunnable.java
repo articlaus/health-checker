@@ -33,7 +33,6 @@ public class RequestRunnable implements Runnable {
 
     private ServiceModel model;
 
-
     public RequestRunnable(ServiceModel model) {
         this.model = model;
     }
@@ -61,6 +60,7 @@ public class RequestRunnable implements Runnable {
                 try {
                     if (model.getMethod().equals(MethodEnum.GET)) {
                         HttpGet req = new HttpGet(builder.build());
+                        setHeaders(req, model.getHeaders());
                         response = httpClient.execute(req);
                     } else {
                         HttpEntityEnclosingRequestBase req;
@@ -68,7 +68,6 @@ public class RequestRunnable implements Runnable {
                             req = new HttpPut(builder.build());
                         else
                             req = new HttpPost(builder.build());
-
                         setHeaders(req, model.getHeaders());
                         StringEntity body = new StringEntity(new String(Base64.decodeBase64(model.getBody())));
                         req.setEntity(body);
@@ -78,6 +77,7 @@ public class RequestRunnable implements Runnable {
                     if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
                         handleError(model.getName(), host, response.getStatusLine().getStatusCode());
                     }
+                    log.info("Service - " + model.getName() + " is healthy on host - " + host);
                 } catch (HttpHostConnectException eh) {
                     handleError(model.getName(), host, -1);
                 } catch (ConnectTimeoutException | SocketTimeoutException eh) {
@@ -90,6 +90,7 @@ public class RequestRunnable implements Runnable {
     }
 
     private void handleError(String name, String host, int statusCode) {
+        log.error("Service - " + name + " is unhealthy on host - " + host + " sending Notification on Slack");
         SlackModel slackModel = new SlackModel();
         slackModel.setUsername("Health Bot");
         if (-1 == statusCode) {
